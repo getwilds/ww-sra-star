@@ -1,11 +1,11 @@
 version 1.0
   ## Note:  to keep this workflow simple, we have designed this as written to perform STAR analysis
-  ## for hg38 datasets using a specific module avilable at Fred Hutch.  Contact the author for more
+  ## for hg38 datasets using a specific module avilable at Fred Hutch.  Contact the Amy Paguirigan(vortexing on GitHub) for more
   ## tips should this need to be changed.
 
 workflow SRA_STAR2Pass {
   input { 
-    Array[String] sra_id_list = ["SRR10724344"]
+    Array[String] sra_id_list = ["SRR10724344"] ## This sample takes about 11 hours to complete depending on the download speed from SRA
   }
 
       String referenceGenome = "hg38"
@@ -22,7 +22,7 @@ workflow SRA_STAR2Pass {
         r1fastq = fastqdump.R1end,
         r2fastq = fastqdump.R2end,
         referenceGenome = referenceGenome,
-        cpu = 6
+        cpu = 12
     }
 
   } # End scatter 
@@ -75,8 +75,8 @@ task fastqdump {
     }
     runtime {
         memory: 2 * ncpu + " GB"
-        docker: "ncbi/sra-tools:3.0.0"
-        #docker: 'abralab/sratoolkit:v2.9.6'
+        #docker: "ncbi/sra-tools:3.0.0"
+        docker: 'abralab/sratoolkit:v2.9.6'
         cpu: ncpu
     }
     output {
@@ -123,8 +123,8 @@ task STARalignTwoPass {
     File SJout = "SJ.out.tab"
   }
   runtime {
-    modules: "STAR/2.7.6a-foss-2019b"
-    memory: 3 * cpu + "GB"
+    modules: "STAR/2.7.6a-GCC-10.2.0 SAMtools/1.11-GCC-10.2.0"
+    memory: 2 * cpu + "GB"
     cpu: cpu
   }
 }
