@@ -54,11 +54,11 @@ task fastqdump {
     # check if paired ended
     numLines=$(fastq-dump -X 1 -Z --split-spot "~{sra_id}" | wc -l)
     paired_end="false"
-    if [ "$numLines" -eq 8 ]; then
+    if [ $numLines -eq 8 ]; then
       paired_end="true"
     fi
     # perform fastqdump
-    if [ "$paired_end" == 'true' ]; then
+    if [ $paired_end == 'true' ]; then
       echo true > paired_file
       pfastq-dump \
         -t ~{ncpu} \
@@ -82,8 +82,8 @@ task fastqdump {
 
   runtime {
     memory: 2 * ncpu + " GB"
-    #docker: "ncbi/sra-tools:3.0.0"
-    docker: 'abralab/sratoolkit:v2.9.6'
+    # docker: "ncbi/sra-tools:3.0.0"
+    docker: 'ghcr.io/stjude/abralab/sratoolkit:v3.0.0'
     cpu: ncpu
   }
 }
