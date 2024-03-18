@@ -21,9 +21,9 @@ workflow SRA_STAR2Pass {
 
     call STARalignTwoPass {
       input:
-        base_file_name = id,
         r1fastq = fastqdump.R1end,
         r2fastq = fastqdump.R2end,
+        base_file_name = id,
         referenceGenome = referenceGenome,
         cpu = 12
     }
@@ -45,7 +45,7 @@ workflow SRA_STAR2Pass {
 
 task fastqdump {
   input {
-    String? sra_id
+    String sra_id
     Int ncpu = 12
   }
 
@@ -60,17 +60,28 @@ task fastqdump {
     # perform fastqdump
     if [ $paired_end == 'true' ]; then
       echo true > paired_file
-      pfastq-dump \
-        -t ~{ncpu} \
-        --gzip \
+      parallel-fastq-dump \
+        --sra-id ~{sra_id} \
+        --threads ~{ncpu} \
+        --outdir ./ \
         --split-files \
-        -s "~{sra_id}" -O ./
+        --gzip
+      # pfastq-dump \
+      #   -t ~{ncpu} \
+      #   --gzip \
+      #   --split-files \
+      #   -s "~{sra_id}" -O ./
     else
       touch paired_file
-      pfastq-dump \
-        -t ~{ncpu} \
-        --gzip \
-        -s "~{sra_id}" -O ./
+      parallel-fastq-dump \
+        --sra-id ~{sra_id} \
+        --threads ~{ncpu} \
+        --outdir ./ \
+        --gzip
+      # pfastq-dump \
+      #   -t ~{ncpu} \
+      #   --gzip \
+      #   -s "~{sra_id}" -O ./
     fi
   >>>
 
@@ -83,7 +94,8 @@ task fastqdump {
   runtime {
     memory: 2 * ncpu + " GB"
     # docker: "ncbi/sra-tools:3.0.0"
-    docker: 'ghcr.io/stjude/abralab/sratoolkit:v3.0.0'
+    # docker: 'ghcr.io/stjude/abralab/sratoolkit:v3.0.0'
+    modules: "parallel-fastq-dump/0.6.7-GCCcore-11.2.0"
     cpu: ncpu
   }
 }
@@ -98,10 +110,10 @@ task STARalignTwoPass {
   }
 
   command <<<
-    set -e
+    set -eo pipefail
     STAR \
       --genomeDir /shared/biodata/reference/iGenomes/Homo_sapiens/UCSC/hg38/Sequence/STAR2Index \
-      --readFilesIn "${r1fastq}" "${r2fastq}" \
+      --readFilesIn ${r1fastq} ${r2fastq} \
       --runThreadN ~{cpu} \
       --readFilesCommand zcat \
       --sjdbOverhang 100 \
