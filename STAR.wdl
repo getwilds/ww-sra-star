@@ -113,7 +113,7 @@ task STARalignTwoPass {
     set -eo pipefail
     STAR \
       --genomeDir /shared/biodata/reference/iGenomes/Homo_sapiens/UCSC/hg38/Sequence/STAR2Index \
-      --readFilesIn ${r1fastq} ${r2fastq} \
+      --readFilesIn ~{r1fastq} ~{r2fastq} \
       --runThreadN ~{cpu} \
       --readFilesCommand zcat \
       --sjdbOverhang 100 \
@@ -121,17 +121,17 @@ task STARalignTwoPass {
       --twopassMode Basic \
       --quantMode GeneCounts \
       --quantTranscriptomeBAMcompression 5 
-    mv Aligned.sortedByCoord.out.bam "${base_file_name}.${referenceGenome}.Aligned.sortedByCoord.out.bam"
-    mv ReadsPerGene.out.tab "${base_file_name}.${referenceGenome}.ReadsPerGene.out.tab"
-    mv Log.final.out "${base_file_name}.${referenceGenome}.Log.final.out"
-    samtools index "${base_file_name}.${referenceGenome}.Aligned.sortedByCoord.out.bam"
+    mv Aligned.sortedByCoord.out.bam "~{base_file_name}.~{referenceGenome}.Aligned.sortedByCoord.out.bam"
+    mv ReadsPerGene.out.tab "~{base_file_name}.~{referenceGenome}.ReadsPerGene.out.tab"
+    mv Log.final.out "~{base_file_name}.~{referenceGenome}.Log.final.out"
+    samtools index "~{base_file_name}.~{referenceGenome}.Aligned.sortedByCoord.out.bam"
   >>>
 
   output {
-    File bam = "${base_file_name}.${referenceGenome}.Aligned.sortedByCoord.out.bam"
-    File bai = "${base_file_name}.${referenceGenome}.Aligned.sortedByCoord.out.bam.bai"
-    File geneCounts = "${base_file_name}.${referenceGenome}.ReadsPerGene.out.tab"
-    File log_final = "${base_file_name}.${referenceGenome}.Log.final.out"
+    File bam = "~{base_file_name}.~{referenceGenome}.Aligned.sortedByCoord.out.bam"
+    File bai = "~{base_file_name}.~{referenceGenome}.Aligned.sortedByCoord.out.bam.bai"
+    File geneCounts = "~{base_file_name}.~{referenceGenome}.ReadsPerGene.out.tab"
+    File log_final = "~{base_file_name}.~{referenceGenome}.Log.final.out"
     File log_progress = "Log.progress.out"
     File log = "Log.out"
     File SJout = "SJ.out.tab"
