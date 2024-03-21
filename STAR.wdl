@@ -6,8 +6,8 @@ version 1.0
 
 workflow SRA_STAR2Pass {
   input { 
-    Array[String] sra_id_list = ["SRR10724344"]
-    ## This sample takes about 11 hours to complete depending on the download speed from SRA
+    Array[String] sra_id_list
+    File star_db
   }
 
   String referenceGenome = "hg38"
@@ -21,6 +21,7 @@ workflow SRA_STAR2Pass {
 
     call STARalignTwoPass {
       input:
+        star_db_tar_gz = star_db,
         r1fastq = fastqdump.R1end,
         r2fastq = fastqdump.R2end,
         base_file_name = id,
@@ -66,11 +67,6 @@ task fastqdump {
         --outdir ./ \
         --split-files \
         --gzip
-      # pfastq-dump \
-      #   -t ~{ncpu} \
-      #   --gzip \
-      #   --split-files \
-      #   -s "~{sra_id}" -O ./
     else
       touch paired_file
       parallel-fastq-dump \
@@ -78,10 +74,6 @@ task fastqdump {
         --threads ~{ncpu} \
         --outdir ./ \
         --gzip
-      # pfastq-dump \
-      #   -t ~{ncpu} \
-      #   --gzip \
-      #   -s "~{sra_id}" -O ./
     fi
   >>>
 
@@ -93,15 +85,14 @@ task fastqdump {
 
   runtime {
     memory: 2 * ncpu + " GB"
-    # docker: "ncbi/sra-tools:3.0.0"
-    # docker: 'ghcr.io/stjude/abralab/sratoolkit:v3.0.0'
-    modules: "parallel-fastq-dump/0.6.7-GCCcore-11.2.0"
+    docker: "ghcr.io/tefirman/pfastqdump:latest"
     cpu: ncpu
   }
 }
 
 task STARalignTwoPass {
   input {
+    File star_db_tar_gz
     File r1fastq
     File r2fastq
     String base_file_name
@@ -109,10 +100,13 @@ task STARalignTwoPass {
     Int cpu
   }
 
+  String star_db_dir = basename(star_db_tar_gz, ".tar.gz")
+
   command <<<
     set -eo pipefail
+    tar -xzf ~{star_db_tar_gz}
     STAR \
-      --genomeDir /shared/biodata/reference/iGenomes/Homo_sapiens/UCSC/hg38/Sequence/STAR2Index \
+      --genomeDir ~{star_db_dir} \
       --readFilesIn ~{r1fastq} ~{r2fastq} \
       --runThreadN ~{cpu} \
       --readFilesCommand zcat \
@@ -138,7 +132,7 @@ task STARalignTwoPass {
   }
 
   runtime {
-    modules: "STAR/2.7.6a-GCC-10.2.0 SAMtools/1.11-GCC-10.2.0"
+    docker: "ghcr.io/tefirman/star:latest"
     memory: 2 * cpu + "GB"
     cpu: cpu
   }
