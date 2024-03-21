@@ -1,3 +1,4 @@
 {
-  "SRA_STAR2Pass.sra_id_list": ["id1", "id2"]
+  "SRA_STAR2Pass.sra_id_list": ["id1", "id2"],
+  "star_db": "/path/to/star_ref.tar.gz"
 }
