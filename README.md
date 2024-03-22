@@ -8,7 +8,7 @@ This WILDS WDL workflow downloads paired FASTQs from [SRA](https://www.ncbi.nlm.
 
 For Fred Hutch users that are new to WDL, we recommend using [PROOF](https://sciwiki.fredhutch.org/dasldemos/proof-how-to/) to submit these workflows directly to the on-premise HPC cluster, as it simplifies interaction with Cromwell and provides a user-friendly front-end for job submission and tracking. For users outside of Fred Hutch or more advanced users who who would like to run the workflow locally, command line execution is relatively simple: 
 ```
-java -jar cromwell-86.jar run STAR.wdl --inputs STAR-inputs.json
+java -jar cromwell-86.jar run ww-sra-star.wdl --inputs ww-sra-star-inputs.json
 ```
 Although Cromwell is demonstrated here, this pipeline is not specific to Cromwell and can be run using whichever WDL execution method you prefer ([miniwdl](https://github.com/chanzuckerberg/miniwdl), [Terra](https://terra.bio/), [HealthOmics](https://docs.aws.amazon.com/omics/latest/dev/workflows.html), etc.).
 
