@@ -14,7 +14,7 @@ Although Cromwell is demonstrated here, this pipeline is not specific to Cromwel
 
 ## Support
 
-For questions, bugs, and/or feature requests, reach out to the Fred Hutch Data Science Lab (DaSL) at wilds@fredhutch.org, or open an issue on our [issue tracker](https://github.com/getwilds/fastq-to-cram/issues).
+For questions, bugs, and/or feature requests, reach out to the Fred Hutch Data Science Lab (DaSL) at wilds@fredhutch.org, or open an issue on our [issue tracker](https://github.com/getwilds/ww-sra-star/issues).
 
 ## Contributing
 
