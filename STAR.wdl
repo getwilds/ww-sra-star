@@ -85,7 +85,7 @@ task fastqdump {
 
   runtime {
     memory: 2 * ncpu + " GB"
-    docker: "ghcr.io/tefirman/pfastqdump:latest"
+    docker: "ghcr.io/getwilds/pfastqdump:0.6.7"
     cpu: ncpu
   }
 }
@@ -132,7 +132,7 @@ task STARalignTwoPass {
   }
 
   runtime {
-    docker: "ghcr.io/tefirman/star:latest"
+    docker: "ghcr.io/getwilds/star:2.7.6a"
     memory: 2 * cpu + "GB"
     cpu: cpu
   }
