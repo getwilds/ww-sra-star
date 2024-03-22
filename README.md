@@ -1,5 +1,5 @@
 
-# tg-wdl-SRA-STAR
+# ww-sra-star
 [![Project Status: Experimental – Useable, some support, not open to feedback, unstable API.](https://getwilds.org/badges/badges/experimental.svg)](https://getwilds.org/badges/#experimental)
 
 This WILDS WDL workflow downloads paired FASTQs from [SRA](https://www.ncbi.nlm.nih.gov/sra) and aligns them using the [two-pass methodology](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) of [STAR](https://github.com/alexdobin/STAR). It is intended to be a relatively simplistic demonstration of an RNA sequencing pipeline within the context of the WILDS ecosystem.
