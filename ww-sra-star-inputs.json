@@ -1,0 +1,7 @@
+{
+  "SRA_STAR2Pass.sra_id_list": ["id1", "id2"],
+  "SRA_STAR2Pass.ref_genome": {
+    "star_tar":"/path/to/star_ref_hg38.tar.gz", 
+    "ref_name":"hg38"
+  }
+}
